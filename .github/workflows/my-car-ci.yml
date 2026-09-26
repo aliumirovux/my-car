@@ -1,0 +1,29 @@
+# My Car (Expo app in my-car/): typecheck, lint, unit tests.
+# Independent of the Rasta Pages deploy (deploy.yml).
+name: My Car CI
+
+on:
+  push:
+    branches: [main]
+    paths: ['my-car/**', '.github/workflows/my-car-ci.yml']
+  pull_request:
+    paths: ['my-car/**', '.github/workflows/my-car-ci.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: my-car
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: my-car/package-lock.json
+      - run: npm ci
+      - run: npm run validate

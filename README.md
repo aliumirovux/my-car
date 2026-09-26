@@ -1,5 +1,7 @@
 # Rasta
 
+> Bu repoda ikkinchi, mustaqil ilova ham bor: **`my-car/`** — My Car (Expo / React Native). Rasta bilan kod yoki paket boʻlishmaydi; qarang: `my-car/ARCHITECTURE.md`.
+
 Avto-qismlar va aksessuar doʻkonlari uchun sotuv, qoldiq va nasiya hisobi. Telefon-first PWA, oflayn ishlaydi.
 
 **Holat:** MVP-1, lokal rejim (barcha maʼlumot brauzerda — IndexedDB). Supabase sinxronizatsiyasi va SMS-kirish — keyingi bosqich.
