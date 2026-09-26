@@ -113,7 +113,7 @@ Full formulas with worked examples are in [docs/business-rules](docs/business-ru
 
 ## 8. Open decisions
 
-These must be settled before or during Phase 2. Recommendations are given but not decided.
+These must be settled before or during Phase 3 (data foundation). Recommendations are given but not decided.
 
 | # | Decision | Options | Recommendation |
 |---|---|---|---|

@@ -1,7 +1,7 @@
 # My Car — Roadmap
 
 Phases are ordered by dependency. Scope inside later phases will change as earlier ones
-land. Phases 0 and 1 are complete. The MVP scope is defined in PRODUCT_SPEC.md §4.
+land. Phases 0–2 are complete. The MVP scope is defined in PRODUCT_SPEC.md §4.
 
 ## Phase 0 — Discovery & foundation ✅
 
@@ -20,7 +20,15 @@ land. Phases 0 and 1 are complete. The MVP scope is defined in PRODUCT_SPEC.md �
 - User stories with acceptance criteria for every MVP feature (`docs/user-stories.md`).
 - Deterministic business rules with worked examples (`docs/business-rules/`).
 
-## Phase 2 — Data foundation & vehicles
+## Phase 2 — Design system ✅
+
+- Semantic tokens (light/dark, contrast-tested), typography, spacing, radius, motion.
+- 22 UI components + 4 domain components with interaction states and accessibility.
+- Icon system (Material Community Icons, semantic names).
+- Theme preference (System / Light / Dark); dev-only gallery at `/design-system`.
+- DESIGN_SYSTEM.md; component and contrast tests.
+
+## Phase 3 — Data foundation & vehicles
 
 Decisions required first: PRODUCT_SPEC.md §8 D1–D4, D7.
 
@@ -32,22 +40,22 @@ Decisions required first: PRODUCT_SPEC.md §8 D1–D4, D7.
 - Navigation shell (tabs) replacing the placeholder route; onboarding.
 - Vehicles: create, edit, archive, delete, switcher.
 - i18n: add English (`en`); preselect Uzbek at first launch instead of the device language.
-- Settings: language, theme.
+- Settings screen: language, theme (the theme preference already exists in the store).
 
-## Phase 3 — Recording
+## Phase 4 — Recording
 
 - Fuel (incl. methane/propane/electric units), consumption.
 - Expenses with categories and monthly totals.
 - Maintenance records and plans; manual odometer updates.
 - History timeline.
 
-## Phase 4 — Staying ahead
+## Phase 5 — Staying ahead
 
 - Documents with expiry status and renewal.
 - Reminders list; local notifications (`expo-notifications`, D6).
 - Dashboard.
 
-## Phase 5 — Insight & release
+## Phase 6 — Insight & release
 
 - Analytics (monthly, categories, cost per km, consumption trend).
 - EAS Build profiles, signing, Play Store internal testing track, crash reporting.
@@ -70,11 +78,11 @@ multi-currency, cross-vehicle analytics, shared vehicles, widgets.
    on Google Play — confirm ownership of the domain/brand first.
 4. **Session storage.** Supabase sessions are stored in AsyncStorage (unencrypted). Consider
    `expo-secure-store`-backed storage (with chunking for its size limit) before release.
-5. **Brand & design direction.** The palette in `constants/theme.ts` is a neutral placeholder;
-   icons/splash are Expo template images.
+5. **Brand assets.** The design system uses brand color #595FEB, but the app icon and splash
+   are still Expo template images, and there is no logo yet.
 6. **Expo tooling behind the proxy.** In the build environment api.expo.dev and docs.expo.dev
    were unreachable: `expo install` needed `EXPO_OFFLINE=1`, and two `expo-doctor` checks
    (config schema, React Native Directory) could not run. Re-run `npm run doctor` on an
    unrestricted network.
 7. **Not yet run on a device/emulator.** Validation so far is static (typecheck, lint, tests,
-   Android bundle export, prebuild). First Phase 2 task: launch on a real Android device.
+   Android bundle export, prebuild). First Phase 3 task: launch on a real Android device (and review the `/design-system` gallery there in both themes).

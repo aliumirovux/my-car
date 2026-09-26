@@ -1,6 +1,6 @@
 # My Car — Architecture
 
-Describes what is in the repository **now** (Phase 0) and the rules new code must follow.
+Describes what is in the repository **now** (through Phase 2, design system) and the rules new code must follow.
 Sections marked *Planned* are decisions for upcoming phases, not implemented code.
 
 ## 1. Repository
@@ -17,10 +17,12 @@ committed — they are generated from `app.json` (Continuous Native Generation).
 | Navigation | Expo Router (file-based, typed routes) | Routes in `src/app/` |
 | State | Zustand 5 (+ `persist` → AsyncStorage) | Client/UI state only |
 | Backend | Supabase (`@supabase/supabase-js`) | anon key + RLS only |
-| Forms | React Hook Form + Zod (`@hookform/resolvers`) | Installed; first used in Phase 2 |
+| Forms | React Hook Form + Zod (`@hookform/resolvers`) | Installed; first used with the first product form |
 | Validation | Zod 4 | Env, forms, API payloads |
 | i18n | In-house typed dictionaries + `expo-localization` | See §5 |
-| Tests | Jest 29 + `jest-expo` | |
+| UI | In-house design system (`src/theme`, `src/components/ui`) | See DESIGN_SYSTEM.md |
+| Icons | Material Community Icons via `@expo/vector-icons` | Semantic names in `src/theme/icons.ts` |
+| Tests | Jest 29 + `jest-expo` + React Native Testing Library 13 | Native mocks in `jest.setup.ts` |
 | Lint | ESLint 9 flat config + `eslint-config-expo` | |
 
 ## 3. Source layout
@@ -33,14 +35,17 @@ committed — they are generated from `app.json` (Continuous Native Generation).
     app/              ROUTES ONLY. Each file is a screen; _layout.tsx defines navigators.
     features/<name>/  Feature modules (vehicles, dashboard, fuel, expenses, maintenance,
                       documents, reminders, analytics, history, settings)
-    components/       Shared, feature-agnostic UI (Screen, AppText, …)
-    hooks/            Shared React hooks (useTheme, …)
+    theme/            Design tokens, icon map, ThemeProvider / useTheme (DESIGN_SYSTEM.md)
+    components/ui/    Design-system primitives (Button, Input, Card, …)
+    components/domain/ Presentational My Car blocks (VehicleCard, ExpenseRow, …)
+    hooks/            Shared React hooks (useReducedMotion, …)
     stores/           Global Zustand stores (settings)
     services/         Cross-feature data access (Supabase queries, sync) — empty for now
     lib/              Configured third-party clients (env, supabase)
     types/            Shared domain types — empty for now
     utils/            Pure functions, no React/RN imports (format)
-    constants/        Design tokens and app constants (theme)
+    constants/        App constants — empty for now
+    test/             Test helpers (renderWithTheme)
     i18n/             Dictionaries + translation hook
 ```
 
@@ -67,23 +72,26 @@ Rules:
 2. **Business logic lives in pure functions** (`logic.ts`, `utils/`) with no React or
    React Native imports, so it is unit-testable in Node.
 3. **Features don't reach into each other's internals** — only via `index.ts`.
-4. **No raw colors or font sizes in components** — use `useTheme()` tokens from
-   `constants/theme.ts`.
+4. **No raw colors, font sizes or spacing numbers in components** — use `useTheme()` from
+   `@/theme/ThemeProvider` and the components in `@/components/ui` (DESIGN_SYSTEM.md §10).
 5. **No user-visible string literals in components** — use `useT()`.
 
 ## 4. What exists today
 
 | File | Role |
 |---|---|
-| `src/app/_layout.tsx` | Root `Stack`, `SafeAreaProvider`, status bar following the color scheme |
-| `src/app/index.tsx` | Temporary placeholder route (app name + "coming soon"). Replaced in Phase 2 |
-| `src/components/Screen.tsx`, `AppText.tsx` | Safe-area screen container; themed text |
-| `src/constants/theme.ts` | Light/dark palettes, spacing, radius, typography, 48dp touch target |
-| `src/hooks/useTheme.ts` | Picks the palette from the system color scheme |
+| `src/app/_layout.tsx` | Root `Stack` inside `SafeAreaProvider` → `ThemeProvider` → `SnackbarProvider` |
+| `src/app/index.tsx` | Temporary placeholder route; links to the gallery in development builds |
+| `src/app/design-system.tsx` | Dev-only design-system gallery (redirects in release builds) |
+| `src/theme/*` | Semantic color tokens (light/dark), typography, spacing, radius, sizes, motion, icons, ThemeProvider |
+| `src/components/ui/*` | 22 design-system components (DESIGN_SYSTEM.md §7) |
+| `src/components/domain/*` | VehicleCard, ExpenseRow, MaintenanceRow, DocumentRow, status → tone mapping |
+| `src/hooks/useReducedMotion.ts` | OS "reduce motion" setting |
+| `src/utils/color.ts` | WCAG contrast ratio (used by the contrast test) |
 | `src/lib/env.ts` | Zod-validated `EXPO_PUBLIC_*` config; `null` when not configured |
 | `src/lib/supabase.ts` | Supabase client (AsyncStorage session, foreground-only token refresh); `null` without env |
 | `src/i18n/*` | `uz` (reference) and `ru` dictionaries, `useT()`, device-language detection |
-| `src/stores/settings.ts` | Persisted language preference |
+| `src/stores/settings.ts` | Persisted language and theme preference (System / Light / Dark) |
 | `src/utils/format.ts` | UZS money, km, number grouping, `dd.mm.yyyy` |
 
 ## 5. i18n
@@ -96,12 +104,12 @@ Rules:
 - Number/date formatting is hand-written in `utils/format.ts` rather than `Intl`, because
   Hermes locale data for `uz` is not reliable across Android versions.
 - **Supported languages are uz, ru and en** (PRODUCT_SPEC.md §2). The code currently has uz and
-  ru only, and picks the device language on first launch; Phase 2 adds `en` and switches to
+  ru only, and picks the device language on first launch; Phase 3 adds `en` and switches to
   "Uzbek preselected".
 - No i18n library for now: a flat dictionary covers the need. Revisit if pluralisation
   rules (Russian has three plural forms) become common — that is the trigger to adopt one.
 
-## 6. Data & backend (*Planned* — Phase 2)
+## 6. Data & backend (*Planned* — Phase 3)
 
 Supabase is the backend. Constraints already fixed:
 
@@ -114,7 +122,7 @@ Supabase is the backend. Constraints already fixed:
 - Derived values (consumption, totals, statuses, due dates) are computed, never stored
   (GEN-11). The conceptual entities are listed in `docs/business-rules/README.md` §2.
 
-Open decision (blocks the Phase 2 schema): **data strategy**, PRODUCT_SPEC.md §8 D1.
+Open decision (blocks the Phase 3 schema): **data strategy**, PRODUCT_SPEC.md §8 D1.
 
 ## 7. Configuration & secrets
 

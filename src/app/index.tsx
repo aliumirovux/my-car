@@ -1,22 +1,23 @@
 import { StyleSheet, View } from 'react-native';
+import { router } from 'expo-router';
 
-import { AppText } from '@/components/AppText';
-import { Screen } from '@/components/Screen';
+import { AppText, Button, Screen } from '@/components/ui';
 import { useT } from '@/i18n';
 
-// Temporary entry route for Phase 0. Replaced by the real navigation in Phase 2.
+// Temporary entry route. Replaced by the real navigation when product screens are built.
 export default function Index() {
   const t = useT();
   return (
-    <Screen style={styles.center}>
+    <Screen scroll={false} contentStyle={styles.center}>
       <View style={styles.block}>
-        <AppText variant="title">{t('app.name')}</AppText>
-        <AppText color="textMuted">{t('app.tagline')}</AppText>
+        <AppText variant="heading1">{t('app.name')}</AppText>
+        <AppText tone="secondary">{t('app.tagline')}</AppText>
       </View>
       <View style={styles.block}>
-        <AppText variant="heading">{t('placeholder.title')}</AppText>
-        <AppText color="textMuted">{t('placeholder.body')}</AppText>
+        <AppText variant="heading3">{t('placeholder.title')}</AppText>
+        <AppText tone="secondary">{t('placeholder.body')}</AppText>
       </View>
+      {__DEV__ ? <Button label="Design system" variant="secondary" onPress={() => router.push('/design-system')} /> : null}
     </Screen>
   );
 }

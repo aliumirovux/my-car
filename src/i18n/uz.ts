@@ -5,6 +5,12 @@ export const uz = {
   'app.tagline': 'Avtomobilingiz hisobi bir joyda',
   'placeholder.title': 'Tez orada',
   'placeholder.body': 'Ilova ishlab chiqilmoqda.',
+  'common.close': 'Yopish',
+  'common.retry': 'Qayta urinish',
+  'common.loading': 'Yuklanmoqda…',
+  'common.select': 'Tanlang',
+  'common.error.title': 'Nimadir notoʻgʻri ketdi',
+  'common.error.message': 'Maʼlumotni yuklab boʻlmadi. Qayta urinib koʻring.',
 } as const;
 
 export type TranslationKey = keyof typeof uz;

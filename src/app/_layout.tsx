@@ -2,19 +2,30 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { useTheme } from '@/hooks/useTheme';
+import { SnackbarProvider } from '@/components/ui';
+import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
 
-export default function RootLayout() {
+function ThemedStack() {
   const { colors, scheme } = useTheme();
   return (
-    <SafeAreaProvider>
+    <SnackbarProvider>
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: colors.background },
+          contentStyle: { backgroundColor: colors.background.primary },
         }}
       />
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+    </SnackbarProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <ThemedStack />
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }
