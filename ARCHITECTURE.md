@@ -5,9 +5,8 @@ Sections marked *Planned* are decisions for upcoming phases, not implemented cod
 
 ## 1. Repository
 
-The repository contains only My Car, an Expo app at the repository root. It previously
-held **Rasta** (a Vite/React web PWA for an auto-parts shop); that code was removed when the
-repository was repurposed and remains available in Git history (commit `1f26b17` and earlier).
+A single Expo app at the repository root. Native `android/` and `ios/` folders are not
+committed — they are generated from `app.json` (Continuous Native Generation).
 
 ## 2. Stack
 

@@ -5,8 +5,7 @@ land; only Phase 0 is complete.
 
 ## Phase 0 — Discovery & foundation ✅
 
-- Repository assessed. It held Rasta (an unrelated web PWA); that code was removed and the
-  repository now contains only the My Car Expo app at its root.
+- Repository assessed and set up as a single Expo app at the root.
 - Stack installed: Expo SDK 57, Expo Router, TypeScript strict, Zustand, Supabase client,
   React Hook Form, Zod, expo-localization.
 - Folder structure and feature-module contract (ARCHITECTURE.md §3).
@@ -45,22 +44,19 @@ Decisions required first (see Risks): offline strategy, auth method, application
 
 ## Risks and decisions to address next
 
-1. **Repository name.** The GitHub repository is still called `rasta`. Rename it in
-   GitHub → Settings → General (GitHub redirects the old URL), then update local remotes.
-   The old Rasta GitHub Pages site stays online until Pages is disabled in Settings → Pages.
-2. **Offline-first vs. online-only.** Determines whether a local database and sync queue are
+1. **Offline-first vs. online-only.** Determines whether a local database and sync queue are
    needed. Must be decided before the schema.
-3. **Auth method.** Phone + SMS OTP needs an Uzbek SMS provider and Supabase custom SMS hook;
+2. **Auth method.** Phone + SMS OTP needs an Uzbek SMS provider and Supabase custom SMS hook;
    email/Google is faster to ship.
-4. **Android application id `uz.mycar.app`** is a placeholder. It is permanent once published
+3. **Android application id `uz.mycar.app`** is a placeholder. It is permanent once published
    on Google Play — confirm ownership of the domain/brand first.
-5. **Session storage.** Supabase sessions are stored in AsyncStorage (unencrypted). Consider
+4. **Session storage.** Supabase sessions are stored in AsyncStorage (unencrypted). Consider
    `expo-secure-store`-backed storage (with chunking for its size limit) before release.
-6. **Brand & design direction.** The palette in `constants/theme.ts` is a neutral placeholder;
+5. **Brand & design direction.** The palette in `constants/theme.ts` is a neutral placeholder;
    icons/splash are Expo template images.
-7. **Expo tooling behind the proxy.** In the build environment api.expo.dev and docs.expo.dev
+6. **Expo tooling behind the proxy.** In the build environment api.expo.dev and docs.expo.dev
    were unreachable: `expo install` needed `EXPO_OFFLINE=1`, and two `expo-doctor` checks
    (config schema, React Native Directory) could not run. Re-run `npm run doctor` on an
    unrestricted network.
-8. **Not yet run on a device/emulator.** Validation so far is static (typecheck, lint, tests,
+7. **Not yet run on a device/emulator.** Validation so far is static (typecheck, lint, tests,
    Android bundle export, prebuild). First Phase 1 task: launch on a real Android device.
