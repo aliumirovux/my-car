@@ -5,14 +5,14 @@ land; only Phase 0 is complete.
 
 ## Phase 0 — Discovery & foundation ✅
 
-- Repository assessed; My Car created as an isolated Expo app in `my-car/` (the repo root is
-  the unrelated Rasta PWA and is left untouched).
+- Repository assessed. It held Rasta (an unrelated web PWA); that code was removed and the
+  repository now contains only the My Car Expo app at its root.
 - Stack installed: Expo SDK 57, Expo Router, TypeScript strict, Zustand, Supabase client,
   React Hook Form, Zod, expo-localization.
 - Folder structure and feature-module contract (ARCHITECTURE.md §3).
 - Design tokens (light/dark), `Screen` / `AppText`, i18n (uz, ru), UZS/km/date formatters.
 - Env validation, `.env.example`, Supabase client that tolerates missing config.
-- Tooling: typecheck, ESLint, Jest (8 tests), CI workflow for `my-car/`.
+- Tooling: typecheck, ESLint, Jest (8 tests), CI workflow.
 
 ## Phase 1 — Data foundation & vehicles
 
@@ -45,9 +45,9 @@ Decisions required first (see Risks): offline strategy, auth method, application
 
 ## Risks and decisions to address next
 
-1. **Repository placement.** My Car lives in `my-car/` of the `rasta` repo only because this
-   is the repo the work was requested in. It shares nothing with Rasta; moving it to a
-   dedicated repository is recommended before Phase 1 (a `git subtree split` keeps history).
+1. **Repository name.** The GitHub repository is still called `rasta`. Rename it in
+   GitHub → Settings → General (GitHub redirects the old URL), then update local remotes.
+   The old Rasta GitHub Pages site stays online until Pages is disabled in Settings → Pages.
 2. **Offline-first vs. online-only.** Determines whether a local database and sync queue are
    needed. Must be decided before the schema.
 3. **Auth method.** Phone + SMS OTP needs an Uzbek SMS provider and Supabase custom SMS hook;

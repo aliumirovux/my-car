@@ -43,6 +43,5 @@ Docs: https://docs.expo.dev/eas/index.md
 ## This project (My Car)
 
 - Read `ARCHITECTURE.md` before adding code; `PRODUCT_SPEC.md` for scope; `ROADMAP.md` for phase boundaries.
-- This app lives in `my-car/` inside the `rasta` repository. The repo root is a separate product (Rasta PWA) — do not modify it from here.
 - If `expo install` fails with a proxy/network error, run it with `EXPO_OFFLINE=1` — it then uses the version map bundled in the `expo` package.
 - Before finishing any task: `npm run validate` (typecheck + lint + tests).

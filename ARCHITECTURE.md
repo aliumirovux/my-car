@@ -3,18 +3,11 @@
 Describes what is in the repository **now** (Phase 0) and the rules new code must follow.
 Sections marked *Planned* are decisions for upcoming phases, not implemented code.
 
-## 1. Repository layout
+## 1. Repository
 
-The `rasta` Git repository contains two independent apps:
-
-| Path | Product | Stack |
-|---|---|---|
-| `/` (root) | **Rasta** — auto-parts shop POS, live on GitHub Pages | Vite, React 18 web PWA, Dexie, Tailwind |
-| `/my-car` | **My Car** — this app | Expo SDK 57, React Native 0.86 |
-
-They share no code, dependencies or lockfile. The root `npm ci`, the root `tsconfig.json`
-and the Pages workflow do not touch `my-car/`. `my-car/` can be moved to its own
-repository without changes (see ROADMAP.md, Risks).
+The repository contains only My Car, an Expo app at the repository root. It previously
+held **Rasta** (a Vite/React web PWA for an auto-parts shop); that code was removed when the
+repository was repurposed and remains available in Git history (commit `1f26b17` and earlier).
 
 ## 2. Stack
 
@@ -34,7 +27,7 @@ repository without changes (see ROADMAP.md, Risks).
 ## 3. Source layout
 
 ```
-my-car/
+./
   app.json            Expo config (name, android.package, scheme, plugins)
   assets/             icons, splash
   src/
@@ -134,7 +127,6 @@ far simpler but fails on poor connectivity. See PRODUCT_SPEC.md §6 Q1.
 ## 8. Development
 
 ```bash
-cd my-car
 npm install
 cp .env.example .env         # optional until Supabase is used
 npm run android              # expo start --android (Expo Go or dev build)
@@ -145,4 +137,4 @@ npm run doctor               # expo-doctor
 Add native packages with `npx expo install <pkg>` (SDK-matched versions). Behind a proxy
 that blocks api.expo.dev, prefix with `EXPO_OFFLINE=1`.
 
-CI: `.github/workflows/my-car-ci.yml` runs `npm run validate` on changes under `my-car/`.
+CI: `.github/workflows/ci.yml` runs `npm run validate` on pushes to `main` and on pull requests.
