@@ -17,7 +17,7 @@ committed — they are generated from `app.json` (Continuous Native Generation).
 | Navigation | Expo Router (file-based, typed routes) | Routes in `src/app/` |
 | State | Zustand 5 (+ `persist` → AsyncStorage) | Client/UI state only |
 | Backend | Supabase (`@supabase/supabase-js`) | anon key + RLS only |
-| Forms | React Hook Form + Zod (`@hookform/resolvers`) | Installed; first used in Phase 1 |
+| Forms | React Hook Form + Zod (`@hookform/resolvers`) | Installed; first used in Phase 2 |
 | Validation | Zod 4 | Env, forms, API payloads |
 | i18n | In-house typed dictionaries + `expo-localization` | See §5 |
 | Tests | Jest 29 + `jest-expo` | |
@@ -76,7 +76,7 @@ Rules:
 | File | Role |
 |---|---|
 | `src/app/_layout.tsx` | Root `Stack`, `SafeAreaProvider`, status bar following the color scheme |
-| `src/app/index.tsx` | Temporary placeholder route (app name + "coming soon"). Replaced in Phase 1 |
+| `src/app/index.tsx` | Temporary placeholder route (app name + "coming soon"). Replaced in Phase 2 |
 | `src/components/Screen.tsx`, `AppText.tsx` | Safe-area screen container; themed text |
 | `src/constants/theme.ts` | Light/dark palettes, spacing, radius, typography, 48dp touch target |
 | `src/hooks/useTheme.ts` | Picks the palette from the system color scheme |
@@ -95,10 +95,13 @@ Rules:
   ASCII `'`. Search/normalisation code must treat all apostrophe variants as equal.
 - Number/date formatting is hand-written in `utils/format.ts` rather than `Intl`, because
   Hermes locale data for `uz` is not reliable across Android versions.
+- **Supported languages are uz, ru and en** (PRODUCT_SPEC.md §2). The code currently has uz and
+  ru only, and picks the device language on first launch; Phase 2 adds `en` and switches to
+  "Uzbek preselected".
 - No i18n library for now: a flat dictionary covers the need. Revisit if pluralisation
   rules (Russian has three plural forms) become common — that is the trigger to adopt one.
 
-## 6. Data & backend (*Planned* — Phase 1 decision)
+## 6. Data & backend (*Planned* — Phase 2)
 
 Supabase is the backend. Constraints already fixed:
 
@@ -106,11 +109,12 @@ Supabase is the backend. Constraints already fixed:
   with policies scoped to `auth.uid()`. The service-role key never enters this repo.
 - Records get client-generated UUIDs, so creates are idempotent if an offline sync layer
   is added.
-- Money is stored as integer soʻm; odometer as integer km; timestamps as `timestamptz`.
+- Money is stored as integer soʻm; odometer as integer km; fuel volume as `numeric(8,2)`;
+  record dates as SQL `date` (no time zone, GEN-6); audit timestamps as `timestamptz`.
+- Derived values (consumption, totals, statuses, due dates) are computed, never stored
+  (GEN-11). The conceptual entities are listed in `docs/business-rules/README.md` §2.
 
-Open decision (blocks Phase 1 schema work): **online-only vs. offline-first.**
-Offline-first needs a local store (e.g. `expo-sqlite`) and a sync queue; online-only is
-far simpler but fails on poor connectivity. See PRODUCT_SPEC.md §6 Q1.
+Open decision (blocks the Phase 2 schema): **data strategy**, PRODUCT_SPEC.md §8 D1.
 
 ## 7. Configuration & secrets
 

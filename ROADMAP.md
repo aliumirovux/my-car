@@ -1,7 +1,7 @@
 # My Car — Roadmap
 
 Phases are ordered by dependency. Scope inside later phases will change as earlier ones
-land; only Phase 0 is complete.
+land. Phases 0 and 1 are complete. The MVP scope is defined in PRODUCT_SPEC.md §4.
 
 ## Phase 0 — Discovery & foundation ✅
 
@@ -13,34 +13,52 @@ land; only Phase 0 is complete.
 - Env validation, `.env.example`, Supabase client that tolerates missing config.
 - Tooling: typecheck, ESLint, Jest (8 tests), CI workflow.
 
-## Phase 1 — Data foundation & vehicles
+## Phase 1 — Product specification ✅
 
-Decisions required first (see Risks): offline strategy, auth method, application id.
+- PRODUCT_SPEC.md: principle, market, MVP scope, exclusions, open decisions.
+- User journey, empty and error states (`docs/user-flows/`).
+- User stories with acceptance criteria for every MVP feature (`docs/user-stories.md`).
+- Deterministic business rules with worked examples (`docs/business-rules/`).
 
-- Supabase project; schema for `profiles`, `vehicles` with RLS; migrations committed as SQL.
-- Auth flow (method per decision) and session handling.
-- Navigation shell (tabs) replacing the placeholder route.
-- Vehicles: list, add, edit (first React Hook Form + Zod form).
-- Settings: language switch.
+## Phase 2 — Data foundation & vehicles
 
-## Phase 2 — Recording
+Decisions required first: PRODUCT_SPEC.md §8 D1–D4, D7.
 
-- Fuel log (multi-fuel incl. CNG/propane), consumption logic with unit tests.
-- Expenses with categories.
-- Maintenance records.
-- History feed.
+- Business-rule engine as pure, unit-tested functions (`logic.ts` per feature), using the
+  worked examples in `docs/business-rules/` as test cases.
+- Supabase project; schema for profiles, vehicles, odometer readings with RLS; migrations
+  committed as SQL.
+- Auth flow and session handling; account deletion.
+- Navigation shell (tabs) replacing the placeholder route; onboarding.
+- Vehicles: create, edit, archive, delete, switcher.
+- i18n: add English (`en`); preselect Uzbek at first launch instead of the device language.
+- Settings: language, theme.
 
-## Phase 3 — Staying ahead
+## Phase 3 — Recording
 
-- Documents with expiry dates.
-- Reminders (date / mileage) and local notifications (`expo-notifications`).
-- Dashboard summarising the selected vehicle.
+- Fuel (incl. methane/propane/electric units), consumption.
+- Expenses with categories and monthly totals.
+- Maintenance records and plans; manual odometer updates.
+- History timeline.
 
-## Phase 4 — Insight & release
+## Phase 4 — Staying ahead
 
-- Analytics (spending by period/category, cost per km).
-- Data export.
+- Documents with expiry status and renewal.
+- Reminders list; local notifications (`expo-notifications`, D6).
+- Dashboard.
+
+## Phase 5 — Insight & release
+
+- Analytics (monthly, categories, cost per km, consumption trend).
 - EAS Build profiles, signing, Play Store internal testing track, crash reporting.
+- Market validation of the [to validate] lists (D8).
+
+## After the MVP
+
+Excluded from the MVP by decision (PRODUCT_SPEC.md §5): marketplace, social features, mechanic
+marketplace, GPS tracking, OBD, insurance purchase, financing, payments, AI assistant.
+Smaller deferred items: custom reminders, document photos, receipt scanning, CSV export,
+multi-currency, cross-vehicle analytics, shared vehicles, widgets.
 
 ## Risks and decisions to address next
 
@@ -59,4 +77,4 @@ Decisions required first (see Risks): offline strategy, auth method, application
    (config schema, React Native Directory) could not run. Re-run `npm run doctor` on an
    unrestricted network.
 7. **Not yet run on a device/emulator.** Validation so far is static (typecheck, lint, tests,
-   Android bundle export, prebuild). First Phase 1 task: launch on a real Android device.
+   Android bundle export, prebuild). First Phase 2 task: launch on a real Android device.

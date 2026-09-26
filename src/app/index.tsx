@@ -4,7 +4,7 @@ import { AppText } from '@/components/AppText';
 import { Screen } from '@/components/Screen';
 import { useT } from '@/i18n';
 
-// Temporary entry route for Phase 0. Replaced by the real navigation in Phase 1.
+// Temporary entry route for Phase 0. Replaced by the real navigation in Phase 2.
 export default function Index() {
   const t = useT();
   return (
